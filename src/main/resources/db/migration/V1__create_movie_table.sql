@@ -1,8 +1,12 @@
-CREATE TABLE movie (
+CREATE TABLE movies (
     id BIGSERIAL PRIMARY KEY,
     name VARCHAR(255) NOT NULL,
-    year VARCHAR(10),
-    old INTEGER,
+    release_year INT,
+    age_rating INT,
     description TEXT,
-    duracao VARCHAR(20)
+    duration VARCHAR(20),
+    image_url VARCHAR(255),
+    trailer_url VARCHAR(255),
+    created_at TIMESTAMP DEFAULT NOW(),
+    updated_at TIMESTAMP DEFAULT NOW()
 );
