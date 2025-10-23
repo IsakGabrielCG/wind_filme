@@ -7,14 +7,21 @@ import lombok.Setter;
 @Entity
 @Getter
 @Setter
-@Table(name = "movie")
+@Table(name = "movies")
 public class Movie {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-    private String name;
-    private String year; // ano mes dia
-    private Integer old;
-    private String description;
-    private String duracao;
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY) private Long id;
+
+    @Column(nullable=false) private String name;
+
+    @Column(name="release_year") private Integer releaseYear;
+
+    @Column(name="age_rating") private Integer ageRating;
+
+    @Column(columnDefinition="text") private String description;
+
+    @Column(name="duration") private String duration;
+
+    @Column(name="image_url") private String imageUrl;
+
+    @Column(name="trailer_url") private String trailerUrl;
 }
