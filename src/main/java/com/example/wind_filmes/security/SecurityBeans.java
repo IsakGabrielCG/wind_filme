@@ -1,4 +1,4 @@
-package com.example.wind_filmes.Security;
+package com.example.wind_filmes.security;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

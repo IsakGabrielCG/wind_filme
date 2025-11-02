@@ -20,44 +20,62 @@ public class UserService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
 
-    public UserResponse register(RegisterUserRequest req){
-        if (userRepository.existsByEmail(req.email())){
-            throw new EmailAlreadyUsedException(req.email());
+    public UserResponse register(RegisterUserRequest req) {
+        String email = normalizeEmail(req.email());
+        if (userRepository.existsByEmail(email)) {
+            throw new EmailAlreadyUsedException(email);
         }
 
         User user = new User();
         user.setName(req.name().trim());
-        user.setEmail(req.email().toLowerCase());
+        user.setEmail(email);
         user.setPassword(passwordEncoder.encode(req.password()));
         user.setRole(Role.USER);
+        user.setActive(true);
 
         User saved = userRepository.save(user);
-        return new UserResponse(saved.getId(), saved.getName(), saved.getEmail(), saved.getRole().name());
-    }
-
-
-    public Page<UserResponse> list(Pageable pageable) {
-        return userRepository.findAll(pageable).map(this::toResponse);
-    }
-
-    public UserResponse get(Long id) {
-        User u = userRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("User " + id + " not found"));
-        return toResponse(u);
-    }
-
-    public UserResponse updateName(Long id, String name) {
-        User u = userRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("User " + id + " not found"));
-        u.setName(name.trim());
-        User saved = userRepository.save(u);
         return toResponse(saved);
     }
 
+    /** Lista somente usuários ATIVOS (soft delete) */
+    public Page<UserResponse> list(Pageable pageable) {
+        return userRepository.findAllByActiveTrue(pageable)
+                .map(this::toResponse);
+    }
+
+    /** Busca um usuário ATIVO por id */
+    public UserResponse get(Long id) {
+        User u = userRepository.findByIdAndActiveTrue(id)
+                .orElseThrow(() -> new EntityNotFoundException("User %d not found".formatted(id)));
+        return toResponse(u);
+    }
+
+    /** Atualiza somente o nome (em usuário ATIVO) */
+    public UserResponse updateName(Long id, String name) {
+        User u = userRepository.findByIdAndActiveTrue(id)
+                .orElseThrow(() -> new EntityNotFoundException("User %d not found".formatted(id)));
+        u.setName(name.trim());
+        return toResponse(userRepository.save(u));
+    }
+
+    /** Soft delete: marca active=false (não remove do banco) */
     public void deactivate(Long id) {
         User u = userRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("User " + id + " not found"));
-        userRepository.delete(u); // por enquanto hard delete
+                .orElseThrow(() -> new EntityNotFoundException("User %d not found".formatted(id)));
+        if (!u.isActive()) return; // já desativado
+        u.setActive(false);
+        userRepository.save(u);
+    }
+
+    /** Útil para /api/users/me (pegar pelo e-mail do token) */
+    public User findActiveByEmail(String email) {
+        return userRepository.findByEmail(normalizeEmail(email))
+                .filter(User::isActive)
+                .orElseThrow(() -> new EntityNotFoundException("User with email %s not found".formatted(email)));
+    }
+
+    private String normalizeEmail(String email) {
+        return email == null ? null : email.trim().toLowerCase();
     }
 
     private UserResponse toResponse(User u) {
@@ -68,5 +86,4 @@ public class UserService {
                 u.getRole().name()
         );
     }
-
 }
