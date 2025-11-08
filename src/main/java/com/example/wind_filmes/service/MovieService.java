@@ -3,7 +3,11 @@ package com.example.wind_filmes.service;
 import com.example.wind_filmes.entity.Movie;
 import com.example.wind_filmes.repository.MovieRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 
 import java.util.List;
 import java.util.Optional;
@@ -40,4 +44,14 @@ public class MovieService {
     public List<Movie> findByCategoryId(Long categoryId) {
         return movieRepository.findByCategory_Id(categoryId);
     }
+
+    /**
+     * Salva um novo filme.
+     * @param movie O objeto Movie a ser salvo.
+     * @return O objeto Movie salvo.
+     */
+    public Movie save(Movie movie) {
+        return movieRepository.save(movie);
+    }
+
 }
