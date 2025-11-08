@@ -42,10 +42,7 @@ public class CategoryController {
             return ResponseEntity.notFound().build();
         }
 
-
         List<Movie> movies = movieService.findByCategoryId(id);
         return ResponseEntity.ok(movies);
-
     }
-
 }

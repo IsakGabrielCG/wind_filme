@@ -31,16 +31,13 @@ public class MovieService {
         return movieRepository.findById(id);
     }
 
-    public List<Movie> findByCategoryId(Long id) {
-        return null;
-    }
 
     /**
      * Retorna todos os filmes de uma categoria específica.
      * @param categoryId O ID da categoria.
      * @return Lista de filmes da categoria.
-
+     */
     public List<Movie> findByCategoryId(Long categoryId) {
         return movieRepository.findByCategory_Id(categoryId);
-    }*/
+    }
 }

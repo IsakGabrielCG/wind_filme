@@ -24,4 +24,8 @@ public class Movie {
     @Column(name="image_url") private String imageUrl;
 
     @Column(name="trailer_url") private String trailerUrl;
+
+    @ManyToOne
+    @JoinColumn(name = "category_id", nullable = false)
+    private Category category;
 }
