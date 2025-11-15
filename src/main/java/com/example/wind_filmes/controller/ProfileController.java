@@ -29,4 +29,27 @@ public class ProfileController {
     public ResponseEntity<List<ProfileResponseDTO>> listByUser(@PathVariable Long userId) {
         return ResponseEntity.ok(profileService.listByUser(userId));
     }
+
+    @GetMapping("/{profileId}")
+    public ResponseEntity<ProfileResponseDTO> findById(
+            @PathVariable Long userId,
+            @PathVariable Long profileId) {
+        return ResponseEntity.ok(profileService.findById(userId, profileId));
+    }
+
+    @PutMapping("/{profileId}")
+    public ResponseEntity<ProfileResponseDTO> update(
+            @PathVariable Long userId,
+            @PathVariable Long profileId,
+            @RequestBody ProfileRequestDTO dto) {
+        return ResponseEntity.ok(profileService.update(userId, profileId, dto));
+    }
+
+    @DeleteMapping("/{profileId}")
+    public ResponseEntity<Void> delete(
+            @PathVariable Long userId,
+            @PathVariable Long profileId) {
+        profileService.delete(userId, profileId);
+        return ResponseEntity.noContent().build();
+    }
 }

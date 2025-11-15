@@ -6,6 +6,7 @@ import com.example.wind_filmes.entity.Profile;
 import com.example.wind_filmes.entity.User;
 import com.example.wind_filmes.repository.ProfileRepository;
 import com.example.wind_filmes.repository.UserRepository;
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -54,4 +55,41 @@ public class ProfileService {
         dto.setUserId(profile.getUser().getId());
         return dto;
     }
+
+    public ProfileResponseDTO findById(Long userId, Long profileId) {
+        Profile profile = findProfileByUserAndId(userId, profileId);
+        return toDTO(profile);
+    }
+
+    public ProfileResponseDTO update(Long userId, Long profileId, ProfileRequestDTO dto) {
+        Profile profile = findProfileByUserAndId(userId, profileId);
+
+        profile.setName(dto.getName());
+        profile.setLanguage(dto.getLanguage());
+        profile.setKid(dto.isKid());
+
+        profile = profileRepository.save(profile);
+        return toDTO(profile);
+    }
+
+    public void delete(Long userId, Long profileId) {
+        Profile profile = findProfileByUserAndId(userId, profileId);
+        profileRepository.delete(profile);
+    }
+
+    // método auxiliar pra garantir que o perfil pertence ao usuário
+    private Profile findProfileByUserAndId(Long userId, Long profileId) {
+        Profile profile = profileRepository.findById(profileId)
+                .orElseThrow(() -> new EntityNotFoundException("Perfil não encontrado"));
+
+        if (!profile.getUser().getId().equals(userId)) {
+            // opcional: você pode lançar outra exception específica
+            throw new EntityNotFoundException("Perfil não encontrado para este usuário");
+        }
+
+        return profile;
+    }
+
+
+
 }
