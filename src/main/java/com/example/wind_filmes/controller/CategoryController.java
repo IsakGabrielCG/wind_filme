@@ -5,11 +5,9 @@ import com.example.wind_filmes.entity.Movie;
 import com.example.wind_filmes.service.CategoryService;
 import com.example.wind_filmes.service.MovieService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -20,6 +18,38 @@ public class CategoryController {
 
     private final CategoryService categoryService;
     private final MovieService movieService;
+
+    // CREATE
+    @PostMapping
+    public ResponseEntity<Category> create(@RequestBody Category category) {
+        Category created = categoryService.create(category);
+        return ResponseEntity.status(HttpStatus.CREATED).body(created);
+    }
+
+    // READ BY ID (novo)
+    @GetMapping("/{id}")
+    public ResponseEntity<Category> getById(@PathVariable Long id) {
+        return categoryService.findById(id)
+                .map(ResponseEntity::ok)
+                .orElseGet(() -> ResponseEntity.notFound().build());
+    }
+
+    // UPDATE
+    @PutMapping("/{id}")
+    public ResponseEntity<Category> update(
+            @PathVariable Long id,
+            @RequestBody Category category
+    ) {
+        Category updated = categoryService.update(id, category);
+        return ResponseEntity.ok(updated);
+    }
+
+    // DELETE
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> delete(@PathVariable Long id) {
+        categoryService.delete(id);
+        return ResponseEntity.noContent().build();
+    }
 
     /**
      * Rota: GET /api/categories

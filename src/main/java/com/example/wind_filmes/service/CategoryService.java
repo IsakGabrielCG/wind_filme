@@ -2,6 +2,7 @@ package com.example.wind_filmes.service;
 
 import com.example.wind_filmes.entity.Category;
 import com.example.wind_filmes.repository.CategoryRepository;
+import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -29,5 +30,29 @@ public class CategoryService {
      */
     public Optional<Category> findById(Long id) {
         return categoryRepository.findById(id);
+    }
+
+    // CREATE
+    public Category create(Category category) {
+        return categoryRepository.save(category);
+    }
+
+    // UPDATE
+    public Category update(Long id, Category data) {
+        Category existing = categoryRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Categoria não encontrada"));
+
+        existing.setName(data.getName());
+        // se tiver mais campos no futuro, atualiza aqui também
+
+        return categoryRepository.save(existing);
+    }
+
+    // DELETE
+    public void delete(Long id) {
+        if (!categoryRepository.existsById(id)) {
+            throw new EntityNotFoundException("Categoria não encontrada");
+        }
+        categoryRepository.deleteById(id);
     }
 }
