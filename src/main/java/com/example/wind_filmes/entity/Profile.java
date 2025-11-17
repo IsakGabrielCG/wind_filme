@@ -26,4 +26,7 @@ public class Profile {
     @ManyToOne(optional = false)
     @JoinColumn(name = "user_id")
     private User user;
+
+    @Column(name = "active")
+    private boolean active = true;
 }

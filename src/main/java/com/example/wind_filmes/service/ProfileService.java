@@ -40,7 +40,7 @@ public class ProfileService {
     }
 
     public List<ProfileResponse> listByUser(Long userId) {
-        return profileRepository.findByUserId(userId)
+        return profileRepository.findByUserIdAndActiveTrue(userId)
                 .stream()
                 .map(this::toDTO)
                 .collect(Collectors.toList());
@@ -74,21 +74,17 @@ public class ProfileService {
 
     public void delete(Long userId, Long profileId) {
         Profile profile = findProfileByUserAndId(userId, profileId);
-        profileRepository.delete(profile);
+        profile.setActive(false);
+        profileRepository.save(profile);
     }
+
 
     // método auxiliar pra garantir que o perfil pertence ao usuário
     private Profile findProfileByUserAndId(Long userId, Long profileId) {
-        Profile profile = profileRepository.findById(profileId)
+        return profileRepository.findByIdAndUserIdAndActiveTrue(profileId, userId)
                 .orElseThrow(() -> new EntityNotFoundException("Perfil não encontrado"));
-
-        if (!profile.getUser().getId().equals(userId)) {
-            // opcional: você pode lançar outra exception específica
-            throw new EntityNotFoundException("Perfil não encontrado para este usuário");
-        }
-
-        return profile;
     }
+
 
 
 
