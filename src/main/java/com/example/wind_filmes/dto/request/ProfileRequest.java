@@ -1,14 +1,12 @@
-package com.example.wind_filmes.dto.response;
+package com.example.wind_filmes.dto.request;
 
 import lombok.Getter;
 import lombok.Setter;
 
 @Getter
 @Setter
-public class ProfileResponseDTO {
-    private Long id;
+public class ProfileRequest {
     private String name;
     private String language;
     private boolean kid;
-    private Long userId;
 }

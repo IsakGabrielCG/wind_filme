@@ -48,7 +48,7 @@ public class AuthController {
         userRepository.save(user);
 
         var resp = new LoginResponse(
-                token,                 // ⬅️ agora vai com token
+                token,
                 user.getId(),
                 user.getName(),
                 user.getEmail(),

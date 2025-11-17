@@ -1,7 +1,7 @@
 package com.example.wind_filmes.service;
 
-import com.example.wind_filmes.dto.request.ProfileRequestDTO;
-import com.example.wind_filmes.dto.response.ProfileResponseDTO;
+import com.example.wind_filmes.dto.request.ProfileRequest;
+import com.example.wind_filmes.dto.response.ProfileResponse;
 import com.example.wind_filmes.entity.Profile;
 import com.example.wind_filmes.entity.User;
 import com.example.wind_filmes.repository.ProfileRepository;
@@ -23,7 +23,7 @@ public class ProfileService {
         this.userRepository = userRepository;
     }
 
-    public ProfileResponseDTO create(Long userId, ProfileRequestDTO dto) {
+    public ProfileResponse create(Long userId, ProfileRequest dto) {
 
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new RuntimeException("Usuário não encontrado"));
@@ -39,15 +39,15 @@ public class ProfileService {
         return toDTO(profile);
     }
 
-    public List<ProfileResponseDTO> listByUser(Long userId) {
+    public List<ProfileResponse> listByUser(Long userId) {
         return profileRepository.findByUserId(userId)
                 .stream()
                 .map(this::toDTO)
                 .collect(Collectors.toList());
     }
 
-    private ProfileResponseDTO toDTO(Profile profile) {
-        ProfileResponseDTO dto = new ProfileResponseDTO();
+    private ProfileResponse toDTO(Profile profile) {
+        ProfileResponse dto = new ProfileResponse();
         dto.setId(profile.getId());
         dto.setName(profile.getName());
         dto.setLanguage(profile.getLanguage());
@@ -56,12 +56,12 @@ public class ProfileService {
         return dto;
     }
 
-    public ProfileResponseDTO findById(Long userId, Long profileId) {
+    public ProfileResponse findById(Long userId, Long profileId) {
         Profile profile = findProfileByUserAndId(userId, profileId);
         return toDTO(profile);
     }
 
-    public ProfileResponseDTO update(Long userId, Long profileId, ProfileRequestDTO dto) {
+    public ProfileResponse update(Long userId, Long profileId, ProfileRequest dto) {
         Profile profile = findProfileByUserAndId(userId, profileId);
 
         profile.setName(dto.getName());
