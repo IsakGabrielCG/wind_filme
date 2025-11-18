@@ -57,4 +57,13 @@ public class MovieController {
         Movie savedMovie = movieService.save(movie);
         return ResponseEntity.status(HttpStatus.CREATED).body(savedMovie);
     }
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteMovie(@PathVariable Long id) {
+        boolean deleted = movieService.softDelete(id);
+        if (deleted) {
+            return ResponseEntity.noContent().build(); // 204 No Content
+        } else {
+            return ResponseEntity.notFound().build(); // 404 Not Found
+        }
+    }
 }
