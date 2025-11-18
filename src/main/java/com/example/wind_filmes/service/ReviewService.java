@@ -47,4 +47,22 @@ public class ReviewService {
     public List<Review> listByProfile(Long profileId) {
         return reviewRepository.findByProfileId(profileId);
     }
+
+    public Review updateReview(Long reviewId, double rating, String comment) {
+        Review review = reviewRepository.findById(reviewId)
+                .orElseThrow(() -> new RuntimeException("Review não encontrada"));
+
+        review.setRating(rating);
+        review.setComment(comment);
+
+        return reviewRepository.save(review);
+    }
+
+    public void deleteReview(Long reviewId) {
+        Review review = reviewRepository.findById(reviewId)
+                .orElseThrow(() -> new RuntimeException("Review não encontrada"));
+
+        reviewRepository.delete(review);
+    }
+
 }

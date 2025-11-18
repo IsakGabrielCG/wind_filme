@@ -1,6 +1,7 @@
 package com.example.wind_filmes.controller;
 
 import com.example.wind_filmes.dto.request.ReviewRequest;
+import com.example.wind_filmes.dto.request.ReviewUpdateRequest;
 import com.example.wind_filmes.entity.Review;
 import com.example.wind_filmes.service.ReviewService;
 import lombok.RequiredArgsConstructor;
@@ -44,4 +45,27 @@ public class ReviewController {
     public ResponseEntity<List<Review>> listByProfile(@PathVariable Long profileId) {
         return ResponseEntity.ok(reviewService.listByProfile(profileId));
     }
+
+    @PutMapping("/{reviewId}")
+    public ResponseEntity<Review> updateReview(
+            @PathVariable Long reviewId,
+            @RequestBody ReviewUpdateRequest dto
+    ) {
+        Review updated = reviewService.updateReview(
+                reviewId,
+                dto.getRating(),
+                dto.getComment()
+        );
+
+        return ResponseEntity.ok(updated);
+    }
+
+    @DeleteMapping("/{reviewId}")
+    public ResponseEntity<Void> deleteReview(
+            @PathVariable Long reviewId
+    ) {
+        reviewService.deleteReview(reviewId);
+        return ResponseEntity.noContent().build();
+    }
+
 }
