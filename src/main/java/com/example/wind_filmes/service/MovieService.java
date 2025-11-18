@@ -61,5 +61,17 @@ public class MovieService {
             return true;
         }).orElse(false);
     }
+    /**
+     * Atualiza um filme existente.
+     * @param movie O objeto Movie a ser atualizado (deve conter o ID).
+     * @return O objeto Movie atualizado, ou Optional.empty() se não encontrado.
+     */
+    public Optional<Movie> update(Movie movie) {
+        if (movie.getId() == null || !movieRepository.existsById(movie.getId())) {
+            return Optional.empty();
+        }
+        return Optional.of(movieRepository.save(movie));
+    }
+
 
 }

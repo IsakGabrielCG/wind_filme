@@ -66,4 +66,18 @@ public class MovieController {
             return ResponseEntity.notFound().build(); // 404 Not Found
         }
     }
+
+    /**
+     * Rota: PUT /api/movies/{id}
+     * Atualiza todos os dados de um filme existente.
+     */
+    @PutMapping("/{id}")
+    public ResponseEntity<Movie> updateMovie(@PathVariable Long id, @RequestBody Movie movie) {
+        // Garante que o ID do filme no corpo da requisição corresponda ao ID do path
+        movie.setId(id);
+
+        return movieService.update(movie)
+                .map(ResponseEntity::ok)
+                .orElseGet(() -> ResponseEntity.notFound().build());
+    }
 }
