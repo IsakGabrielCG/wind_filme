@@ -54,4 +54,12 @@ public class MovieService {
         return movieRepository.save(movie);
     }
 
+    public boolean softDelete(Long id) {
+        return movieRepository.findById(id).map(movie -> {
+            movie.setActive(false);
+            movieRepository.save(movie);
+            return true;
+        }).orElse(false);
+    }
+
 }

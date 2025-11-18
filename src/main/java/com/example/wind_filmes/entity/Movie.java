@@ -26,6 +26,7 @@ public class Movie {
     @Column(name="trailer_url") private String trailerUrl;
 
     @ManyToOne
-    @JoinColumn(name = "category_id", nullable = false)
-    private Category category;
+    @JoinColumn(name = "category_id", nullable = false) private Category category;
+
+    @Column(nullable = false) private Boolean active = true;
 }
